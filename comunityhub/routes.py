@@ -2,7 +2,7 @@ from flask import render_template, flash, request, redirect, url_for
 from comunityhub import app, database, bcrypt
 from comunityhub.forms import FormLogin, CreateAccountForm
 from comunityhub.models import User
-from flask_login import login_user
+from flask_login import login_user, logout_user, current_user
 
 users_list = ['Ana', 'Bruna', 'Pedro', 'Joao', 'Clara']
 
@@ -36,7 +36,6 @@ def login():
         else:
             flash(f'Invalid login credentials. Please verify your email and password and try again.', 'alert-danger')
 
-
     if form_creat_account.validate_on_submit() and 'submit' in request.form:
         cript_password = bcrypt.generate_password_hash(form_creat_account.password.data)
         user = User(username=form_creat_account.username.data, email=form_creat_account.email.data,
@@ -47,3 +46,20 @@ def login():
         return redirect(url_for('home'))
 
     return render_template('login.html', form_login=form_login, form_creat_account=form_creat_account)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    flash(f'Logout successful. See you next time!', 'alert-success')
+    return redirect(url_for('home'))
+
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
+
+@app.route('/post/create')
+def creat_post():
+    return render_template('creat-post.html')
