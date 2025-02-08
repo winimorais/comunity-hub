@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
+from comunityhub.models import User
 
 
 class CreateAccountForm(FlaskForm):
@@ -10,6 +11,12 @@ class CreateAccountForm(FlaskForm):
     confirmation = PasswordField('Confirm Password',
                                  validators=[DataRequired(), EqualTo('password', message='Passwords must match')])
     submit = SubmitField('Register')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError(
+                'This email address is already in use. Please use a different email address or log in.')
 
 
 class FormLogin(FlaskForm):
