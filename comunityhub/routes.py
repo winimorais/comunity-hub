@@ -2,7 +2,7 @@ from flask import render_template, flash, request, redirect, url_for
 from comunityhub import app, database, bcrypt
 from comunityhub.forms import FormLogin, CreateAccountForm
 from comunityhub.models import User
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 
 users_list = ['Ana', 'Bruna', 'Pedro', 'Joao', 'Clara']
 
@@ -18,6 +18,7 @@ def contact_details():
 
 
 @app.route('/users')
+@login_required
 def users():
     return render_template('users.html', users_list=users_list)
 
@@ -26,16 +27,18 @@ def users():
 def login():
     form_login = FormLogin()
     form_creat_account = CreateAccountForm()
-
     if form_login.validate_on_submit() and 'login_submit' in request.form:
         user = User.query.filter_by(email=form_login.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form_login.password.data):
             login_user(user, remember=form_login.remember_me.data)
             flash(f'Login successful for e-mail: {form_login.email.data}', 'alert-success')
-            return redirect(url_for('home'))
+            next_param = request.args.get('next')
+            if next_param:
+                return redirect(next_param)
+            else:
+                return redirect(url_for('home'))
         else:
             flash(f'Invalid login credentials. Please verify your email and password and try again.', 'alert-danger')
-
     if form_creat_account.validate_on_submit() and 'submit' in request.form:
         cript_password = bcrypt.generate_password_hash(form_creat_account.password.data)
         user = User(username=form_creat_account.username.data, email=form_creat_account.email.data,
@@ -49,6 +52,7 @@ def login():
 
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     flash(f'Logout successful. See you next time!', 'alert-success')
@@ -56,10 +60,12 @@ def logout():
 
 
 @app.route('/profile')
+@login_required
 def profile():
     return render_template('profile.html')
 
 
 @app.route('/post/create')
+@login_required
 def creat_post():
     return render_template('creat-post.html')
