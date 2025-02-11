@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 from comunityhub.models import User
+from flask_login import current_user
 
 
 class CreateAccountForm(FlaskForm):
@@ -19,8 +21,22 @@ class CreateAccountForm(FlaskForm):
                 'This email address is already in use. Please use a different email address or log in.')
 
 
-class FormLogin(FlaskForm):
+class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(6, 20)])
     remember_me = BooleanField('Remember me')
     login_submit = SubmitField('Login')
+
+
+class ProfileEditForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    profile_photo = FileField('Update profile photo', validators=[FileAllowed(['jpg', 'png'])])
+    profile_edit_submit = SubmitField('Confirm Edit')
+
+    def validate_email(self, email):
+        if current_user.email != email.data:
+            user = User.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError(
+                    'This email address is already in use. Please use a different email address.')

@@ -1,8 +1,11 @@
 from flask import render_template, flash, request, redirect, url_for
 from comunityhub import app, database, bcrypt
-from comunityhub.forms import FormLogin, CreateAccountForm
+from comunityhub.forms import LoginForm, CreateAccountForm, ProfileEditForm
 from comunityhub.models import User
 from flask_login import login_user, logout_user, current_user, login_required
+import secrets
+import os
+from PIL import Image
 
 users_list = ['Ana', 'Bruna', 'Pedro', 'Joao', 'Clara']
 
@@ -25,7 +28,7 @@ def users():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form_login = FormLogin()
+    form_login = LoginForm()
     form_creat_account = CreateAccountForm()
     if form_login.validate_on_submit() and 'login_submit' in request.form:
         user = User.query.filter_by(email=form_login.email.data).first()
@@ -62,10 +65,43 @@ def logout():
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html')
+    profile_photo = url_for('static', filename='profile_photos/{}'.format(current_user.profile_photo))
+    return render_template('profile.html', profile_photo=profile_photo)
 
 
 @app.route('/post/create')
 @login_required
 def creat_post():
     return render_template('creat-post.html')
+
+
+def photo_save(photo):
+    code = secrets.token_hex(8)
+    name, type = os.path.splitext(photo.filename)
+    file_name = name + code + type
+    complete_path = os.path.join(app.root_path, 'static/profile_photos', file_name)
+    size = (400, 400)
+    reduced_image_size = Image.open(photo)
+    reduced_image_size.thumbnail(size)
+    reduced_image_size.save(complete_path)
+    return file_name
+
+
+@app.route('/profile/edit', methods=['GET', 'POST'])
+@login_required
+def profile_edit():
+    form = ProfileEditForm()
+    if form.validate_on_submit():
+        current_user.email = form.email.data
+        current_user.username = form.username.data
+        if form.profile_photo.data:
+            photo_name = photo_save(form.profile_photo.data)
+            current_user.profile_photo = photo_name
+        database.session.commit()
+        flash('Profile updated successfully', 'alert-success')
+        return redirect(url_for('profile'))
+    elif request.method == "GET":
+        form.email.data = current_user.email
+        form.username.data = current_user.username
+    profile_photo = url_for('static', filename='profile_photos/{}'.format(current_user.profile_photo))
+    return render_template('profile-edit.html', profile_photo=profile_photo, form=form)
