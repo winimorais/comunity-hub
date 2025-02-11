@@ -32,6 +32,13 @@ class ProfileEditForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     profile_photo = FileField('Update profile photo', validators=[FileAllowed(['jpg', 'png'])])
+    course_python = BooleanField('Python Developer')
+    course_java = BooleanField('Java Developer')
+    course_php = BooleanField('PHP Developer')
+    course_go = BooleanField('Go Developer')
+    course_javascript = BooleanField('React Developer')
+    course_sql = BooleanField('SQL')
+    course_aws = BooleanField('AWS Cloud Developer')
     profile_edit_submit = SubmitField('Confirm Edit')
 
     def validate_email(self, email):
