@@ -37,7 +37,7 @@ class ProfileEditForm(FlaskForm):
     course_php = BooleanField('PHP Developer')
     course_go = BooleanField('Go Developer')
     course_javascript = BooleanField('React Developer')
-    course_sql = BooleanField('SQL')
+    course_sql = BooleanField('SQL Developer')
     course_aws = BooleanField('AWS Cloud Developer')
     profile_edit_submit = SubmitField('Confirm Edit')
 

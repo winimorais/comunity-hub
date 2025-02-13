@@ -1,3 +1,5 @@
+from email.policy import default
+
 from flask_login import LoginManager
 
 from comunityhub import database, login_manager
@@ -21,6 +23,7 @@ class User(database.Model, UserMixin):
     password = database.Column(database.String, nullable=False)
     profile_photo = database.Column(database.String, default='default.jpg')
     posts = database.relationship('Post', backref='writer', lazy=True)
+    courses = database.Column(database.String, nullable=False, default='None')
 
 
 class Post(database.Model):
