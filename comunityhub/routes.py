@@ -1,18 +1,17 @@
 from flask import render_template, flash, request, redirect, url_for
 from comunityhub import app, database, bcrypt
-from comunityhub.forms import LoginForm, CreateAccountForm, ProfileEditForm
-from comunityhub.models import User
+from comunityhub.forms import LoginForm, CreateAccountForm, ProfileEditForm, CreatePostForm
+from comunityhub.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets
 import os
 from PIL import Image
 
-users_list = ['Ana', 'Bruna', 'Pedro', 'Joao', 'Clara']
-
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    posts = Post.query.order_by(Post.id.desc())
+    return render_template('home.html', posts=posts)
 
 
 @app.route('/contact-details')
@@ -23,6 +22,7 @@ def contact_details():
 @app.route('/users')
 @login_required
 def users():
+    users_list = User.query.all()
     return render_template('users.html', users_list=users_list)
 
 
@@ -69,10 +69,17 @@ def profile():
     return render_template('profile.html', profile_photo=profile_photo)
 
 
-@app.route('/post/create')
+@app.route('/post/create', methods=['GET', 'POST'])
 @login_required
 def creat_post():
-    return render_template('creat-post.html')
+    form = CreatePostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, body=form.body.data, author=current_user)
+        database.session.add(post)
+        database.session.commit()
+        flash('Post created successfully', 'alert-success')
+        return redirect(url_for('home'))
+    return render_template('creat-post.html', form=form)
 
 
 def photo_save(photo):
@@ -114,3 +121,11 @@ def profile_edit():
         form.username.data = current_user.username
     profile_photo = url_for('static', filename='profile_photos/{}'.format(current_user.profile_photo))
     return render_template('profile-edit.html', profile_photo=profile_photo, form=form)
+
+
+@app.route('/post/<post_id>')
+@login_required
+def show_post(post_id):
+    post = Post.query.get(post_id)
+    return render_template('post.html', post=post)
+

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 from comunityhub.models import User
 from flask_login import current_user
@@ -47,3 +47,9 @@ class ProfileEditForm(FlaskForm):
             if user:
                 raise ValidationError(
                     'This email address is already in use. Please use a different email address.')
+
+
+class CreatePostForm(FlaskForm):
+    title = StringField('Post Title', validators=[DataRequired(), Length(2, 140)])
+    body = TextAreaField('Write your post here', validators=[DataRequired()])
+    creat_post_submit = SubmitField('Creat a Post')
