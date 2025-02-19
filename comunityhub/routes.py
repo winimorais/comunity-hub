@@ -123,9 +123,21 @@ def profile_edit():
     return render_template('profile-edit.html', profile_photo=profile_photo, form=form)
 
 
-@app.route('/post/<post_id>')
+@app.route('/post/<post_id>', methods=['GET', 'POST'])
 @login_required
 def show_post(post_id):
     post = Post.query.get(post_id)
-    return render_template('post.html', post=post)
-
+    if current_user == post.author:
+        form = CreatePostForm()
+        if request.method == 'GET':
+            form.title.data = post.title
+            form.body.data = post.body
+        elif form.validate_on_submit():
+            post.title = form.title.data
+            post.body = form.body.data
+            database.session.commit()
+            flash('Post updated successfully', 'alert-success')
+            return redirect(url_for('home'))
+    else:
+        form = None
+    return render_template('post.html', post=post, form=form)

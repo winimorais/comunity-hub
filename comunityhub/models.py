@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from comunityhub import database, login_manager
 from datetime import datetime, timezone
 from flask_login import UserMixin
+import humanize
 
 
 @login_manager.user_loader
@@ -32,3 +33,11 @@ class Post(database.Model):
     body = database.Column(database.Text, nullable=False)
     posted_on = database.Column(database.DateTime, nullable=False, default=current_utc_time)
     user_id = database.Column(database.Integer, database.ForeignKey('user.id'), nullable=False)
+
+    @property
+    def posted_on_humanized(self):
+        if self.posted_on.tzinfo is None:
+            posted_on_aware = self.posted_on.replace(tzinfo=timezone.utc)
+        else:
+            posted_on_aware = self.posted_on
+        return humanize.naturaltime(current_utc_time() - posted_on_aware)

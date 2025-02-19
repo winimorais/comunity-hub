@@ -16,10 +16,17 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col col-9">
-            <a style="text-decoration: none" href="{{ url_for('show_post', post_id=post.id) }}"><h3>{{ post.title }}</h3></a>
-            <p>{{ post.body }}</p>
-        </div>
+            <div class="col col-9">
+                <h3 style="display: flex; justify-content: space-between; align-items: center;">
+                    <a style="text-decoration: none" href="{{ url_for('show_post', post_id=post.id) }}">
+                        {{ post.title }}
+                    </a>
+                    <small class="text-muted" style="font-size: 15px; pointer-events: none; user-select: none;">
+                        Created on: {{ post.posted_on_humanized }}
+                    </small>
+                </h3>
+                <p style="text-align: justify;">{{ post.body }}</p>
+            </div>
     </div>
     {% endfor %}
 </div>
