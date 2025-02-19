@@ -14,10 +14,11 @@
             </div>
         </div>
         <div class="col col-9">
-            <h3>
+            <h3 style="display: flex; justify-content: space-between; align-items: center;">
                 {{ post.title }}
-                <small class="text-muted" style="font-size: 15px"> Created on: {{ post.posted_on_humanized }}
+                <small class="text-muted mt-2 p-2" style="font-size: 15px;"> Created on: {{ post.posted_on_humanized }}
                 {% if form %}
+                    <br>
                     <br>
                     <a href="#edit_post_form"> Edit Post </a>
                     <a href="#" data-bs-toggle="modal" data-bs-target="#deletePost"> / Delete Post </a>
