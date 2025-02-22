@@ -1,38 +1,38 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{{ url_for('home') }}">ComUnity Hub</a>
+<nav class="navbar navbar-expand-lg" style="background-color: #1A5276;">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}" style="color: #FFFFFF;">ComUnity Hub</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a aria-current="page" class="nav-link active" href="{{ url_for('home') }}">Home</a>
+                    <a class="nav-link {% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}" style="{% if request.endpoint == 'home' %}color: #F39C12;{% else %}color: #FFFFFF;{% endif %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('users') }}">Users</a>
+                    <a class="nav-link {% if request.endpoint == 'users' %}active{% endif %}" href="{{ url_for('users') }}" style="{% if request.endpoint == 'users' %}color: #F39C12;{% else %}color: #FFFFFF;{% endif %}">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('contact_details') }}">Contact</a>
+                    <a class="nav-link {% if request.endpoint == 'contact_details' %}active{% endif %}" href="{{ url_for('contact_details') }}" style="{% if request.endpoint == 'contact_details' %}color: #F39C12;{% else %}color: #FFFFFF;{% endif %}">Contact</a>
                 </li>
             </ul>
             <ul class="d-flex navbar-nav">
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('creat_post') }}">Creat Post</a>
+                        <a class="nav-link {% if request.endpoint == 'create_post' %}active{% endif %}" href="{{ url_for('create_post') }}" style="{% if request.endpoint == 'create_post' %}color: #F39C12;{% else %}color: #FFFFFF;{% endif %}">Create Post</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('profile') }}">My Profile</a>
+                        <a class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}" href="{{ url_for('profile') }}" style="{% if request.endpoint == 'profile' %}color: #F39C12;{% else %}color: #FFFFFF;{% endif %}">My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        <a class="nav-link {% if request.endpoint == 'logout' %}active{% endif %}" href="{{ url_for('logout') }}" style="{% if request.endpoint == 'logout' %}color: #F39C12;{% else %}color: #FFFFFF;{% endif %}">Logout</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('login') }}">Register</a>
+                        <a class="nav-link {% if request.endpoint == 'login' %}active{% endif %}" href="{{ url_for('login') }}" style="{% if request.endpoint == 'login' %}color: #F39C12;{% else %}color: #FFFFFF;{% endif %}">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        <a class="nav-link {% if request.endpoint == 'login' %}active{% endif %}" href="{{ url_for('login') }}" style="{% if request.endpoint == 'login' %}color: #F39C12;{% else %}color: #FFFFFF;{% endif %}">Login</a>
                     </li>
                 {% endif %}
             </ul>

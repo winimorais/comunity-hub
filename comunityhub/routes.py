@@ -71,7 +71,7 @@ def profile():
 
 @app.route('/post/create', methods=['GET', 'POST'])
 @login_required
-def creat_post():
+def create_post():
     form = CreatePostForm()
     if form.validate_on_submit():
         post = Post(title=form.title.data, body=form.body.data, author=current_user)
