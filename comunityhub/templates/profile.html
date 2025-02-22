@@ -16,7 +16,7 @@
                         <div class="d-flex flex-column"><span class="articles">Courses</span> <span class="number1">{{ current_user.courses.count(';') + 1 }}</span>
                     {% endif %}
                     </div>
-                    <div class="d-flex flex-column"><span class="rating">Posts</span> <span class="number3">0</span>
+                    <div class="d-flex flex-column"><span class="rating">Posts</span> <span class="number3">{{ current_user.posts_count() }}</span>
                     </div>
                 </div>
                 <div class="button mt-2 d-flex flex-row align-items-center">
