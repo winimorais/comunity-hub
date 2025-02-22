@@ -1,42 +1,43 @@
 {% extends 'profile.html' %}
 
 {% block profile_edit_form %}
-
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <form action="" class="border p-4 mt-2" method="POST" enctype="multipart/form-data">
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form action="" class="border p-4 shadow-sm" method="POST" enctype="multipart/form-data" style="background-color: #F7F9FB; border-radius: 10px;">
                 {{ form.csrf_token }}
-                <legend>Profile Edit</legend>
+                <legend class="text-center" style="color: #1A5276; font-size: 24px;">Edit Profile</legend>
                 <fieldset>
-                    <div class="form-group">
-                        {{ form.username.label(class="form-control-label") }}
+                    <div class="form-group mb-3">
+                        {{ form.username.label(class="form-control-label", style="color: #2C3E50;") }}
                         {% if form.username.errors %}
                             {{ form.username(class="form-control is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.username.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
+                            <div class="invalid-feedback">
+                                {% for error in form.username.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
                         {% else %}
-                            {{ form.username(class="form-control") }}
+                            {{ form.username(class="form-control", style="border-color: #1A5276;") }}
                         {% endif %}
                     </div>
-                    <div class="form-group">
-                        {{ form.email.label(class="form-control-label") }}
+
+                    <div class="form-group mb-3">
+                        {{ form.email.label(class="form-control-label", style="color: #2C3E50;") }}
                         {% if form.email.errors %}
                             {{ form.email(class="form-control is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.email.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
                         {% else %}
-                            {{ form.email(class="form-control") }}
+                            {{ form.email(class="form-control", style="border-color: #1A5276;") }}
                         {% endif %}
                     </div>
-                    <div class="form-group">
-                        {{ form.profile_photo.label}}
+
+                    <div class="form-group mb-3">
+                        {{ form.profile_photo.label(class="form-control-label", style="color: #2C3E50;") }}
                         {{ form.profile_photo(class="form-control-file") }}
                         {% if form.profile_photo.errors %}
                             {% for erro in form.profile_photo.errors %}
@@ -44,23 +45,25 @@
                             {% endfor %}
                         {% endif %}
                     </div>
-                    <hr>
-                    <p>Courses</p>
+
+                    <hr style="border-color: #1A5276;">
+
+                    <p class="mb-3" style="color: #1A5276; font-weight: bold;">Courses</p>
                     {% for field in form %}
                         {% if 'course_' in field.name %}
-                            <div class="form-group">
-                                {{ field(class="form-check-input") }}
-                                {{ field.label(class="form-check-input-label") }}
+                            <div class="form-group mb-2">
+                                {{ field(class="form-check-input", style="border-color: #1A5276;") }}
+                                {{ field.label(class="form-check-label", style="color: #2C3E50;") }}
                             </div>
                         {% endif %}
                     {% endfor %}
                 </fieldset>
-                {{ form.profile_edit_submit(class="btn btn-primary mt-2") }}
+
+                <div class="form-group text-center mt-4">
+                    {{ form.profile_edit_submit(class="btn btn-primary", style="background-color: #1A5276; border-color: #1A5276; color: #FFFFFF;") }}
+                </div>
             </form>
         </div>
     </div>
 </div>
-
-
-
 {% endblock %}
