@@ -1,4 +1,4 @@
-from flask import render_template, flash, request, redirect, url_for
+from flask import render_template, flash, request, redirect, url_for, abort
 from comunityhub import app, database, bcrypt
 from comunityhub.forms import LoginForm, CreateAccountForm, ProfileEditForm, CreatePostForm
 from comunityhub.models import User, Post
@@ -141,3 +141,16 @@ def show_post(post_id):
     else:
         form = None
     return render_template('post.html', post=post, form=form)
+
+
+@app.route('/post/<post_id>/delete', methods=['GET', 'POST'])
+@login_required
+def post_delete(post_id):
+    post = Post.query.get(post_id)
+    if current_user == post.author:
+        database.session.delete(post)
+        database.session.commit()
+        flash('Post deleted successfully', 'alert-danger')
+        return redirect(url_for('home'))
+    else:
+        abort(403)
