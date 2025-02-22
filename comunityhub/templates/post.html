@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container mt-3">
+
+    <div class="row border mt-4 p-3 mypost">
+        <div class="col col-2">
+            <div class="image pe-2"><img class="rounded" src="{{ url_for('static', filename='profile_photos/' + post.author.profile_photo) }}" width="200"></div>
+            <strong>{{ post.author.username }}</strong>
+            <div class="row justify-content-center">
+                {% for courses in post.author.courses.split(';') %}
+                    <button type="button" class="btn btn-success mt-2" disabled>{{ courses }}</button>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col col-9">
+            <h3 style="display: flex; justify-content: space-between; align-items: center;">
+                {{ post.title }}
+                <small class="text-muted mt-2 p-2" style="font-size: 15px;"> Created on: {{ post.posted_on_humanized }}
+                {% if form %}
+                    <br>
+                    <br>
+                    <a href="#edit_post_form"> Edit Post </a>
+                    <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#deletePost"> / Delete Post </a>
+                {% endif %}
+                </small>
+            </h3>
+            <p style="text-align: justify;">{{ post.body }}</p>
+        </div>
+    </div>
+</div>
+
+{% if form %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <form action="" class="border p-4 mt-2" method="POST" id="edit_post_form">
+                {{ form.csrf_token }}
+                <legend>Edit Post</legend>
+                <fieldset>
+                    <div class="form-group">
+                        {{ form.title.label(class="form-control-label") }}
+                        {% if form.title.errors %}
+                            {{ form.title(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.title.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            {{ form.title(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.body.label(class="form-control-label") }}
+                        {% if form.body.errors %}
+                            {{ form.body(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.body.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            {{ form.body(class="form-control") }}
+                        {% endif %}
+                    </div>
+                </fieldset>
+                {{ form.creat_post_submit(class="btn btn-primary mt-2") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Post</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          Do you really want to delete this post? This action cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <form method="POST" action="{{ url_for('post_delete', post_id=post.id) }}">
+              <button type="submit" class="btn btn-danger">Delete Post</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
